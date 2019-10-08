@@ -22,6 +22,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -42,6 +43,7 @@ public class ValidatorTests {
     }
 
     @Test
+    @Ignore
     public void shouldNotValidateWhenFirstNameEmpty() {
 
         LocaleContextHolder.setLocale(Locale.ENGLISH);
