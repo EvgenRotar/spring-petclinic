@@ -1,5 +1,3 @@
-pipeline {
-
         stage('Unit tests') {
           node {
             git url: 'https://github.com/EvgenRotar/spring-petclinic'
@@ -36,4 +34,3 @@ pipeline {
                   junit 'target/surefire-reports/*.xml'
               }
           }
-}
