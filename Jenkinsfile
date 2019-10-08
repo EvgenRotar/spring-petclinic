@@ -6,8 +6,8 @@ stage('Sonar analysis') {
            -Dsonar.projectKey=Petclinic \
            -Dsonar.host.url=http://localhost:9000 \
            -Dsonar.login=a7ac9a7ba12799c42cdb55b17bb813c360e367ce'
-      waitForQualityGate abortPipeline: true
     }
+    waitForQualityGate abortPipeline: true
   }
 }
 
