@@ -5,7 +5,7 @@ stage('Unit tests') {
     sh 'mvn verify'
   }
    post {
-    always {
+    failure {
       junit 'target/surefire-reports/*.xml'
     }
    }
