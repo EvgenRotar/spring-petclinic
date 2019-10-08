@@ -2,7 +2,7 @@ pipeline {
   agent any
   stages {
     stage('Unit tests') {
-      node {
+      steps {
         git url: 'https://github.com/EvgenRotar/spring-petclinic'
         env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
         sh 'mvn verify'
@@ -10,7 +10,7 @@ pipeline {
     }
 
     stage('Sonar analysis') {
-      node {
+      steps {
         withSonarQubeEnv('sonar') {
           env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
           sh 'mvn sonar:sonar \
@@ -22,7 +22,7 @@ pipeline {
     }
 
     stage('Build') {
-      node {
+      steps {
         git url: 'https://github.com/EvgenRotar/spring-petclinic'
         env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
         sh 'mvn clean install -DskipTests'
