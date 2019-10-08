@@ -3,12 +3,12 @@ stage('Unit tests') {
     git url: 'https://github.com/EvgenRotar/spring-petclinic'
     env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
     sh 'mvn verify'
+    post {
+        always {
+          junit 'target/surefire-reports/*.xml'
+        }
+       }
   }
-   post {
-    failure {
-      junit 'target/surefire-reports/*.xml'
-    }
-   }
 }
 
 stage('Sonar analysis') {
