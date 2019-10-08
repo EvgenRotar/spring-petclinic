@@ -17,6 +17,7 @@ stage('Unit tests') {
     env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
     try {
       sh 'mvn verify'
+      junit 'target/surefire-reports/*.xml'
     } catch(err) {
       junit 'target/surefire-reports/*.xml'
       throw err
