@@ -1,5 +1,4 @@
 pipeline {
-    stages {
 
         stage('Unit tests') {
           node {
@@ -29,7 +28,7 @@ pipeline {
             archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
           }
         }
-      }
+
 
       post {
              always {
