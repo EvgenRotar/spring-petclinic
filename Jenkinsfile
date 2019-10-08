@@ -1,4 +1,4 @@
-stage('Unit Tests') {
+stage('Unit tests') {
   node {
     git url: 'https://github.com/EvgenRotar/spring-petclinic'
     env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
