@@ -1,15 +1,16 @@
-pipeline {
-  agent any
-  stages {
     stage('Unit tests') {
-      steps {
+      node {
+        git url: 'https://github.com/EvgenRotar/spring-petclinic'
+        env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
         sh 'mvn verify'
+        junit 'target/surefire-reports/*.xml'
       }
     }
 
     stage('Sonar analysis') {
-      steps {
+      node {
         withSonarQubeEnv('sonar') {
+          env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
           sh 'mvn sonar:sonar \
                -Dsonar.projectKey=Petclinic \
                -Dsonar.host.url=http://localhost:9000 \
@@ -19,15 +20,10 @@ pipeline {
     }
 
     stage('Build') {
-      steps {
-        sh 'mvn clean install'
+      node {
+        git url: 'https://github.com/EvgenRotar/spring-petclinic'
+        env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
+        sh 'mvn clean install -DskipTests'
+        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
     }
-  }
-  post {
-    always {
-      archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-      junit 'target/surefire-reports/*.xml'
-    }
-  }
-}
