@@ -59,10 +59,10 @@ public class ValidatorTests {
         assertThat(violation.getMessage()).isEqualTo("must not be empty");
     }
 
-    @Test
-    public void failureTest() {
-        int i;
-        assert false;
-    }
+//    @Test
+//    public void failureTest() {
+//        int i;
+//        assert false;
+//    }
 
 }
