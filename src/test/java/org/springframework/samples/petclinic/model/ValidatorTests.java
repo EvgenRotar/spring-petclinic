@@ -16,7 +16,6 @@
 
 package org.springframework.samples.petclinic.model;
 
-import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Set;
 
@@ -49,6 +48,7 @@ public class ValidatorTests {
         Person person = new Person();
         person.setFirstName("");
         person.setLastName("smith");
+
         Validator validator = createValidator();
         Set<ConstraintViolation<Person>> constraintViolations = validator
                 .validate(person);
@@ -57,6 +57,12 @@ public class ValidatorTests {
         ConstraintViolation<Person> violation = constraintViolations.iterator().next();
         assertThat(violation.getPropertyPath().toString()).isEqualTo("firstName");
         assertThat(violation.getMessage()).isEqualTo("must not be empty");
+    }
+
+    @Test
+    public void failureTest() {
+        int i;
+        assert false;
     }
 
 }
