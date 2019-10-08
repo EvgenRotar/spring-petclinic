@@ -3,8 +3,6 @@ pipeline {
   stages {
     stage('Unit tests') {
       steps {
-        git url: 'https://github.com/EvgenRotar/spring-petclinic'
-        env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
         sh 'mvn verify'
       }
     }
@@ -12,7 +10,6 @@ pipeline {
     stage('Sonar analysis') {
       steps {
         withSonarQubeEnv('sonar') {
-          env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
           sh 'mvn sonar:sonar \
                -Dsonar.projectKey=Petclinic \
                -Dsonar.host.url=http://localhost:9000 \
@@ -23,15 +20,13 @@ pipeline {
 
     stage('Build') {
       steps {
-        git url: 'https://github.com/EvgenRotar/spring-petclinic'
-        env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
         sh 'mvn clean install -DskipTests'
-        archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       }
     }
   }
   post {
     always {
+      archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
       junit 'target/surefire-reports/*.xml'
     }
   }
