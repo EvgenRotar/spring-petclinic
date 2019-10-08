@@ -1,7 +1,7 @@
 stage('Build') {
   node {
     git url: 'https://github.com/EvgenRotar/spring-petclinic'
-    env.PATH = "${tool 'MAVEN3.3.9'}/bin:${env.PATH}"
+    env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
     sh 'mvn clean package'
     archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
   }
@@ -10,7 +10,7 @@ stage('Build') {
 stage('Sonar analysis') {
   node {
     withSonarQubeEnv('sonar') {
-      env.PATH = "${tool 'MAVEN3.3.9'}/bin:${env.PATH}"
+      env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
       sh 'mvn sonar:sonar \
            -Dsonar.projectKey=Petclinic \
            -Dsonar.host.url=http://localhost:9000 \
