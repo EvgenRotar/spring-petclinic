@@ -24,13 +24,8 @@
             env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
             sh 'mvn clean package'
             archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+            junit 'target/surefire-reports/*.xml'
           }
         }
-
-
-      post {
-             always {
-                  archive "target/**/*"
-                  junit 'target/surefire-reports/*.xml'
               }
-          }
+
