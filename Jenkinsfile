@@ -20,9 +20,9 @@ stage('Sonar analysis') {
       withSonarQubeEnv('sonar') {
         env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
         sh 'mvn sonar:sonar \
-             -Dsonar.projectKey=Petclinic \
-             -Dsonar.host.url=http://localhost:9000 \
-             -Dsonar.login=a7ac9a7ba12799c42cdb55b17bb813c360e367ce'
+              -Dsonar.projectKey=Petclinic \
+              -Dsonar.host.url=http://localhost:9000 \
+              -Dsonar.login=e6624af31eaeb144181158728d3793467dc9bf09'
       }
       waitForQualityGate abortPipeline: true
     } catch (e) {
