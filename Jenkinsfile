@@ -48,6 +48,7 @@ stage('Build') {
   }
 }
 
+
  def notifyFailed() {
    emailext (
        subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
