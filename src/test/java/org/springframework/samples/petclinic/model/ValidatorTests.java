@@ -60,7 +60,6 @@ public class ValidatorTests {
   }
 
   @Test
-  @Ignore
   public void failureTest() {
     int i;
     assert false;
