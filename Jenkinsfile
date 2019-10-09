@@ -40,7 +40,7 @@ stage('Build') {
     try {
       sh 'mvn clean install -DskipTests'
       archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-      env.BN = VersionNumber([projectStartDate: '2019-10-09', versionNumberString: '1.0.${BN}', versionPrefix: '', worstResultForIncrement: 'ABORTED'])
+      env.BN = VersionNumber([projectStartDate: '2019-10-09', versionNumberString: '1.0.${BUILDS_THIS_YEAR}', versionPrefix: '', worstResultForIncrement: 'ABORTED'])
     } catch (e) {
        currentBuild.result = "FAILED"
        notifyFailed()
