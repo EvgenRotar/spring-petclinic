@@ -7,6 +7,8 @@ stage('Unit tests') {
       junit 'target/surefire-reports/*.xml'
     } catch(err) {
       junit 'target/surefire-reports/*.xml'
+      currentBuild.result = "FAILED"
+      notifyFailed()
       throw err
     }
   }
@@ -14,14 +16,20 @@ stage('Unit tests') {
 
 stage('Sonar analysis') {
   node {
-    withSonarQubeEnv('sonar') {
-      env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
-      sh 'mvn sonar:sonar \
-           -Dsonar.projectKey=Petclinic \
-           -Dsonar.host.url=http://localhost:9000 \
-           -Dsonar.login=a7ac9a7ba12799c42cdb55b17bb813c360e367ce'
+    try {
+      withSonarQubeEnv('sonar') {
+        env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
+        sh 'mvn sonar:sonar \
+             -Dsonar.projectKey=Petclinic \
+             -Dsonar.host.url=http://localhost:9000 \
+             -Dsonar.login=a7ac9a7ba12799c42cdb55b17bb813c360e367ce'
+      }
+      waitForQualityGate abortPipeline: true
+    } catch (e) {
+       currentBuild.result = "FAILED"
+       notifyFailed()
+       throw e
     }
-    waitForQualityGate abortPipeline: true
   }
 }
 
@@ -29,16 +37,23 @@ stage('Build') {
   node {
     git url: 'https://github.com/EvgenRotar/spring-petclinic'
     env.PATH = "${tool 'Maven'}/bin:${env.PATH}"
-    sh 'mvn clean install -DskipTests'
-    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+    try {
+      sh 'mvn clean install -DskipTests'
+      archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+    } catch (e) {
+       currentBuild.result = "FAILED"
+       notifyFailed()
+       throw e
+    }
   }
 }
 
-post {
-         always {
-             echo 'This will always run'
-         }
-         failure {
-             mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "evgeny.rotar.br@gmail.com";
-         }
-}
+
+ def notifyFailed() {
+   emailext (
+       subject: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+       body: """<p>FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+         <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>""",
+       recipientProviders: [[$class: 'DevelopersRecipientProvider']]
+     )
+ }
